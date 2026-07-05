@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header.jsx'
 import BottomNav from '../components/BottomNav.jsx'
+import AddMoneyModal from '../components/AddMoneyModal.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { getEarningsSummary, getLastPayout, MOCK_CHARGING_POINTS } from '../lib/pilot.js'
 
 export default function Earnings() {
-  const { user, profile } = useAuth()
+  const { user, profile, setProfile } = useAuth()
   const [summary, setSummary] = useState({ currentEarning: 0, totalEarning: 0 })
   const [payout, setPayout] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [addMoneyOpen, setAddMoneyOpen] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -39,6 +41,12 @@ export default function Earnings() {
             <p className="font-mono-tab text-2xl font-medium text-ink mt-1">
               ₹{(profile?.walletBalance || 0).toLocaleString('en-IN')}
             </p>
+            <button
+              onClick={() => setAddMoneyOpen(true)}
+              className="text-teal text-xs font-medium mt-2"
+            >
+              + Add money
+            </button>
           </div>
         </div>
 
@@ -89,6 +97,15 @@ export default function Earnings() {
       </div>
 
       <BottomNav />
+
+      <AddMoneyModal
+        userId={user?.uid}
+        isOpen={addMoneyOpen}
+        onClose={() => setAddMoneyOpen(false)}
+        onSuccess={(amount) =>
+          setProfile((prev) => ({ ...prev, walletBalance: (prev?.walletBalance || 0) + amount }))
+        }
+      />
     </div>
   )
 }

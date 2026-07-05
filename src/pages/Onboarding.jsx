@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import ScooterIllustration from '../components/ScooterIllustration.jsx'
+import EarningsPotential from '../components/EarningsPotential.jsx'
 import {
   ONBOARDING_STEPS,
   MOCK_TEAM_LEADS,
@@ -54,6 +55,10 @@ export default function Onboarding() {
         <ScooterIllustration size={72} tone="volt" />
         <h1 className="font-display text-2xl font-semibold text-white mt-3">Become a Volt Pilot</h1>
         <p className="text-white/70 mt-1">Complete these steps to start earning.</p>
+      </div>
+
+      <div className="px-5 mt-4">
+        <EarningsPotential />
       </div>
 
       <div className="px-5 mt-6 flex flex-col gap-2">

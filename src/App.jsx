@@ -14,6 +14,7 @@ import RateCard from './pages/RateCard.jsx'
 import ChargingPoints from './pages/ChargingPoints.jsx'
 import Referral from './pages/Referral.jsx'
 import Help from './pages/Help.jsx'
+import Feedback from './pages/Feedback.jsx'
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -37,6 +38,7 @@ export default function App() {
       <Route path="/charging-points" element={<PrivateRoute><ChargingPoints /></PrivateRoute>} />
       <Route path="/referral" element={<PrivateRoute><Referral /></PrivateRoute>} />
       <Route path="/help" element={<PrivateRoute><Help /></PrivateRoute>} />
+      <Route path="/feedback" element={<PrivateRoute><Feedback /></PrivateRoute>} />
       <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
       <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
     </Routes>

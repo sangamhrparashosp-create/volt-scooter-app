@@ -169,6 +169,30 @@ export async function getUserRideHistory(userId) {
 }
 
 // ---------------------------------------------------------------------
+// WALLET TOP-UP
+// ---------------------------------------------------------------------
+export async function topUpWallet(userId, amount, method, paymentRef) {
+  const userRef = doc(db, 'users', userId)
+  await runTransaction(db, async (tx) => {
+    const snap = await tx.get(userRef)
+    if (!snap.exists()) throw new Error('User not found')
+    const current = snap.data().walletBalance || 0
+    tx.update(userRef, { walletBalance: current + amount })
+
+    const paymentDoc = doc(collection(db, 'payments'))
+    tx.set(paymentDoc, {
+      userId,
+      type: 'wallet_topup',
+      amount,
+      method,
+      status: 'success',
+      gatewayRef: paymentRef,
+      createdAt: serverTimestamp(),
+    })
+  })
+}
+
+// ---------------------------------------------------------------------
 // ADMIN
 // ---------------------------------------------------------------------
 export async function addScooter(scooter) {

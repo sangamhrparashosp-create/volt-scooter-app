@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import Header from '../components/Header.jsx'
 import BottomNav from '../components/BottomNav.jsx'
 import ScooterCard from '../components/ScooterCard.jsx'
 import ChargeRing from '../components/ChargeRing.jsx'
 import ScooterIllustration from '../components/ScooterIllustration.jsx'
+import EarningsPotential from '../components/EarningsPotential.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { listAvailableScooters, getActivePass, PASS_DURATION_DAYS } from '../lib/firestore.js'
 import { getOnboarding, onboardingComplete } from '../lib/pilot.js'
@@ -61,30 +63,37 @@ export default function Home() {
         />
         <div className="px-5">
           {!pilotReady && (
-            <button
-              onClick={() => navigate('/onboarding')}
-              className="w-full bg-rust/15 border border-rust/30 text-white rounded-card p-4 text-left mb-3"
-            >
-              <p className="font-display font-semibold">Finish pilot onboarding</p>
-              <p className="text-sm text-white/80 mt-1">Complete KYC to start earning →</p>
-            </button>
+            <>
+              <button
+                onClick={() => navigate('/onboarding')}
+                className="w-full bg-rust/15 border border-rust/30 text-white rounded-card p-4 text-left mb-3"
+              >
+                <p className="font-display font-semibold">Finish pilot onboarding</p>
+                <p className="text-sm text-white/80 mt-1">Complete KYC to start earning →</p>
+              </button>
+              <div className="mb-3">
+                <EarningsPotential />
+              </div>
+            </>
           )}
           {!profile?.depositHeld ? (
-            <button
+            <motion.button
+              whileTap={{ scale: 0.98 }}
               onClick={() => navigate('/deposit')}
               className="w-full bg-white/10 backdrop-blur border border-white/20 text-white rounded-card p-4 text-left hover:bg-white/15 transition-colors"
             >
               <p className="font-display font-semibold">Pay refundable deposit to start</p>
               <p className="text-sm text-white/70 mt-1">Required once, before your first ride →</p>
-            </button>
+            </motion.button>
           ) : !pass ? (
-            <button
+            <motion.button
+              whileTap={{ scale: 0.98 }}
               onClick={() => navigate('/passes')}
               className="w-full bg-volt text-ink rounded-card p-4 text-left hover:brightness-95 transition-all"
             >
               <p className="font-display font-semibold">Buy your monthly pass</p>
               <p className="text-sm text-ink/70 mt-1">Deposit on file. Unlock unlimited rides for 30 days →</p>
-            </button>
+            </motion.button>
           ) : (
             <div className="w-full bg-white/10 backdrop-blur border border-white/20 rounded-card p-4 flex items-center gap-4">
               <ChargeRing percent={passPercent} label={daysLeft} sublabel="days left" tone="volt" />

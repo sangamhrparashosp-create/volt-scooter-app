@@ -4,23 +4,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: '#10181A',
-        surface: '#F3F7F5',
+        ink: '#221F1D',
+        surface: '#FAF7F2',
         teal: {
-          DEFAULT: '#0B3D3A',
-          700: '#082B29',
-          50: '#E6EDEC',
+          DEFAULT: '#1F4E4A',
+          700: '#163B38',
+          50: '#E9EFEE',
         },
-        volt: '#C8FF3D',
+        volt: '#F2A93B',
         slate: {
-          DEFAULT: '#5B6B68',
-          200: '#D7DFDD',
+          DEFAULT: '#6B6560',
+          200: '#E5DFD7',
         },
-        rust: '#E0562D',
+        rust: '#D65A3A',
       },
       fontFamily: {
-        display: ['"Space Grotesk"', 'sans-serif'],
-        body: ['Inter', 'sans-serif'],
+        display: ['"Baloo 2"', 'sans-serif'],
+        body: ['Hind', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
       },
       borderRadius: {
