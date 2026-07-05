@@ -7,6 +7,8 @@ import ScooterCard from '../components/ScooterCard.jsx'
 import ChargeRing from '../components/ChargeRing.jsx'
 import ScooterIllustration from '../components/ScooterIllustration.jsx'
 import EarningsPotential from '../components/EarningsPotential.jsx'
+import ScooterMap from '../components/ScooterMap.jsx'
+import NextStepCard from '../components/NextStepCard.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { listAvailableScooters, getActivePass, PASS_DURATION_DAYS } from '../lib/firestore.js'
 import { getOnboarding, onboardingComplete } from '../lib/pilot.js'
@@ -18,6 +20,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
   const [pilotReady, setPilotReady] = useState(true)
+  const [view, setView] = useState('list')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -62,39 +65,15 @@ export default function Home() {
           action={<span className="text-volt text-2xl">⚡</span>}
         />
         <div className="px-5">
+          <NextStepCard pilotReady={pilotReady} depositHeld={!!profile?.depositHeld} hasPass={!!pass} />
+
           {!pilotReady && (
-            <>
-              <button
-                onClick={() => navigate('/onboarding')}
-                className="w-full bg-rust/15 border border-rust/30 text-white rounded-card p-4 text-left mb-3"
-              >
-                <p className="font-display font-semibold">Finish pilot onboarding</p>
-                <p className="text-sm text-white/80 mt-1">Complete KYC to start earning →</p>
-              </button>
-              <div className="mb-3">
-                <EarningsPotential />
-              </div>
-            </>
+            <div className="mb-3">
+              <EarningsPotential />
+            </div>
           )}
-          {!profile?.depositHeld ? (
-            <motion.button
-              whileTap={{ scale: 0.98 }}
-              onClick={() => navigate('/deposit')}
-              className="w-full bg-white/10 backdrop-blur border border-white/20 text-white rounded-card p-4 text-left hover:bg-white/15 transition-colors"
-            >
-              <p className="font-display font-semibold">Pay refundable deposit to start</p>
-              <p className="text-sm text-white/70 mt-1">Required once, before your first ride →</p>
-            </motion.button>
-          ) : !pass ? (
-            <motion.button
-              whileTap={{ scale: 0.98 }}
-              onClick={() => navigate('/passes')}
-              className="w-full bg-volt text-ink rounded-card p-4 text-left hover:brightness-95 transition-all"
-            >
-              <p className="font-display font-semibold">Buy your monthly pass</p>
-              <p className="text-sm text-ink/70 mt-1">Deposit on file. Unlock unlimited rides for 30 days →</p>
-            </motion.button>
-          ) : (
+
+          {profile?.depositHeld && pass && (
             <div className="w-full bg-white/10 backdrop-blur border border-white/20 rounded-card p-4 flex items-center gap-4">
               <ChargeRing percent={passPercent} label={daysLeft} sublabel="days left" tone="volt" />
               <div>
@@ -107,7 +86,29 @@ export default function Home() {
       </div>
 
       <div className="px-5 mt-6">
-        <h2 className="font-display font-semibold text-ink mb-3">Scooters nearby</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-display font-semibold text-ink">Scooters nearby</h2>
+          <div className="flex bg-slate-200/50 rounded-full p-1 text-xs font-medium">
+            <button
+              onClick={() => setView('list')}
+              className={`px-3 py-1 rounded-full transition-colors ${view === 'list' ? 'bg-white text-ink shadow-sm' : 'text-slate'}`}
+            >
+              List
+            </button>
+            <button
+              onClick={() => setView('map')}
+              className={`px-3 py-1 rounded-full transition-colors ${view === 'map' ? 'bg-white text-ink shadow-sm' : 'text-slate'}`}
+            >
+              Map
+            </button>
+          </div>
+        </div>
+
+        {view === 'map' && !loading && !loadError && (
+          <div className="mb-4">
+            <ScooterMap scooters={scooters} />
+          </div>
+        )}
 
         {loading ? (
           <div className="flex flex-col gap-3">

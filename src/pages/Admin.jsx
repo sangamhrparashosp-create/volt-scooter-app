@@ -5,7 +5,7 @@ import { addScooter, listAllUsers, listAvailableScooters, setScooterStatus } fro
 export default function Admin() {
   const [users, setUsers] = useState([])
   const [scooters, setScooters] = useState([])
-  const [form, setForm] = useState({ name: '', location: '', battery: 100 })
+  const [form, setForm] = useState({ name: '', location: '', battery: 100, lat: '', lng: '' })
 
   async function refresh() {
     setUsers(await listAllUsers())
@@ -18,8 +18,14 @@ export default function Admin() {
 
   async function handleAddScooter(e) {
     e.preventDefault()
-    await addScooter({ name: form.name, location: form.location, battery: Number(form.battery) })
-    setForm({ name: '', location: '', battery: 100 })
+    await addScooter({
+      name: form.name,
+      location: form.location,
+      battery: Number(form.battery),
+      lat: form.lat ? Number(form.lat) : null,
+      lng: form.lng ? Number(form.lng) : null,
+    })
+    setForm({ name: '', location: '', battery: 100, lat: '', lng: '' })
     refresh()
   }
 
@@ -29,6 +35,13 @@ export default function Admin() {
 
       <section className="mb-10">
         <h2 className="font-display font-semibold text-ink mb-3">Add scooter</h2>
+        <p className="text-sm text-slate mb-3">
+          Get exact coordinates by right-clicking the spot on{' '}
+          <a href="https://www.google.com/maps" target="_blank" rel="noreferrer" className="text-teal underline">
+            Google Maps
+          </a>{' '}
+          — the numbers that pop up (like 12.9716, 77.5946) are latitude, longitude.
+        </p>
         <form onSubmit={handleAddScooter} className="flex flex-wrap gap-3">
           <input
             placeholder="Name"
@@ -38,7 +51,7 @@ export default function Admin() {
             className="border border-slate-200 rounded-xl px-4 py-2 flex-1 min-w-[150px]"
           />
           <input
-            placeholder="Location"
+            placeholder="Location label (e.g. Whitefield Hub)"
             value={form.location}
             onChange={(e) => setForm({ ...form, location: e.target.value })}
             required
@@ -50,6 +63,24 @@ export default function Admin() {
             value={form.battery}
             onChange={(e) => setForm({ ...form, battery: e.target.value })}
             className="border border-slate-200 rounded-xl px-4 py-2 w-32"
+          />
+          <input
+            type="number"
+            step="any"
+            placeholder="Latitude"
+            value={form.lat}
+            onChange={(e) => setForm({ ...form, lat: e.target.value })}
+            required
+            className="border border-slate-200 rounded-xl px-4 py-2 w-36"
+          />
+          <input
+            type="number"
+            step="any"
+            placeholder="Longitude"
+            value={form.lng}
+            onChange={(e) => setForm({ ...form, lng: e.target.value })}
+            required
+            className="border border-slate-200 rounded-xl px-4 py-2 w-36"
           />
           <button type="submit" className="bg-teal text-white rounded-xl px-5 py-2">
             Add

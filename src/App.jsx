@@ -23,6 +23,14 @@ function PrivateRoute({ children }) {
   return children
 }
 
+function AdminRoute({ children }) {
+  const { user, profile, loading } = useAuth()
+  if (loading) return <div className="p-6 text-slate">Loading…</div>
+  if (!user) return <Navigate to="/login" replace />
+  if (profile?.role !== 'admin') return <Navigate to="/" replace />
+  return children
+}
+
 export default function App() {
   return (
     <Routes>
@@ -40,7 +48,7 @@ export default function App() {
       <Route path="/help" element={<PrivateRoute><Help /></PrivateRoute>} />
       <Route path="/feedback" element={<PrivateRoute><Feedback /></PrivateRoute>} />
       <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-      <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
+      <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
     </Routes>
   )
 }

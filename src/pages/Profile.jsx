@@ -60,6 +60,15 @@ export default function Profile() {
           💬 Feedback & complaints
         </button>
 
+        {profile?.role === 'admin' && (
+          <button
+            onClick={() => navigate('/admin')}
+            className="w-full border border-slate-200 text-ink font-medium rounded-xl py-3 mb-3 text-left px-4"
+          >
+            🛠️ Admin panel
+          </button>
+        )}
+
         <button
           onClick={async () => {
             await logout()
