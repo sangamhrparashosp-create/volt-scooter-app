@@ -57,7 +57,7 @@ export default function Home() {
     <div className="max-w-md mx-auto pb-24 min-h-screen">
       <div className="bg-gradient-to-br from-teal to-teal-700 rounded-b-[32px] pb-6">
         <Header
-          title={`Hey, ${profile?.name?.split(' ')[0] || 'there'}`}
+          title={`Hey, ${profile?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'there'}`}
           className="text-white"
           action={<span className="text-volt text-2xl">⚡</span>}
         />

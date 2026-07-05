@@ -24,8 +24,10 @@ export default function Profile() {
       <Header title="Profile" />
       <div className="px-5">
         <div className="bg-white border border-slate-200 rounded-card p-5 mb-4">
-          <p className="font-display font-semibold text-ink">{profile?.name}</p>
-          <p className="text-sm text-slate">{profile?.email}</p>
+          <p className="font-display font-semibold text-ink">
+            {profile?.name || user?.email?.split('@')[0] || 'Your profile'}
+          </p>
+          <p className="text-sm text-slate">{profile?.email || user?.email}</p>
         </div>
 
         <div className="bg-white border border-slate-200 rounded-card p-5 mb-4 flex items-center justify-between">

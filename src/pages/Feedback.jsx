@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react'
-import { collection, query, where, orderBy, getDocs } from 'firebase/firestore'
+import { collection, query, where, getDocs } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
 import { db } from '../firebase.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { HELP_CATEGORIES, submitHelpRequest } from '../lib/pilot.js'
 
 async function getMyRequests(userId) {
-  const q = query(
-    collection(db, 'helpRequests'),
-    where('userId', '==', userId),
-    orderBy('createdAt', 'desc'),
-  )
+  const q = query(collection(db, 'helpRequests'), where('userId', '==', userId))
   const snap = await getDocs(q)
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  const docs = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  // Sorted client-side to avoid requiring a Firestore composite index.
+  return docs.sort((a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0))
 }
 
 const ALL_CATEGORIES = [...HELP_CATEGORIES, 'General feedback']
@@ -31,6 +29,10 @@ export default function Feedback() {
     if (user) {
       getMyRequests(user.uid)
         .then(setHistory)
+        .catch((err) => {
+          console.error('Failed to load feedback history', err)
+          setHistory([])
+        })
         .finally(() => setLoadingHistory(false))
     }
   }, [user, justSent])
